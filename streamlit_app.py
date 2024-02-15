@@ -1,8 +1,12 @@
 import streamlit as st
 from llama_index.core import VectorStoreIndex, ServiceContext, Document
-from llama_index.llms import OpenAI
+from llama_index.llms.openai import OpenAI
 import openai
 from llama_index import SimpleDirectoryReader
+from llama_index.llms.huggingface import (
+    HuggingFaceInferenceAPI,
+    HuggingFaceLLM,
+)
 
 st.set_page_config(page_title="Chat with custom context", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 openai.api_key = st.secrets.openai_key
@@ -19,7 +23,8 @@ def load_data():
     with st.spinner(text="Loading and indexing the FAQ – hang tight! This should take 1-2 minutes."):
         reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
         docs = reader.load_data()
-        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt=prompt)                                                                   )
+        remotely_run = HuggingFaceInferenceAPI(model_name="HuggingFaceH4/zephyr-7b-alpha")
+        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt=prompt))
         index = VectorStoreIndex.from_documents(docs, service_context=service_context)
         return index
 
