@@ -2,7 +2,7 @@ import streamlit as st
 from llama_index.core import VectorStoreIndex, ServiceContext, Document
 from llama_index.llms.openai import OpenAI
 import openai
-from llama_index import SimpleDirectoryReader
+from llama_index.core import SimpleDirectoryReader
 from llama_index.llms.huggingface import (
     HuggingFaceInferenceAPI,
     HuggingFaceLLM,
